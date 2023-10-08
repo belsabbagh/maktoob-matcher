@@ -8,7 +8,6 @@ def download_and_extract(url, out):
     filepath = wget.download(url, out="data/tmp")
     with zipfile.ZipFile(filepath, "r") as zip_ref:
         zip_ref.extractall(out)
-    # clear tmp folder
     os.remove(filepath)
 
 
