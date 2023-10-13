@@ -2,3 +2,4 @@ wget
 pandas
 numpy
 matplotlib
+Arabic-Stopwords

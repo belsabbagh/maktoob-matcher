@@ -1,6 +1,8 @@
 from os import listdir, path
 import pandas as pd
 
+from src.preprocessing.text import preprocess_text
+
 
 def parse_properties(filepath):
     with open(filepath, "r", encoding="utf-8") as f:
@@ -36,9 +38,24 @@ def dataset_iter():
             yield metadata, text
 
 
-def preprocess():
-    df = pd.DataFrame(columns=["text", "author"])
-    for metadata, text in dataset_iter():
-        record = pd.DataFrame({"text": [text], "author": [metadata["author_name"]]})
+def extract_date(metadata):
+    date = f"{metadata['article_year']}-{metadata['article_month']}-{metadata['article_day']}"
+    date = pd.to_datetime(date, format="%Y-%m-%d")
+    return date
+
+
+def aninis_preprocess():
+    df = pd.DataFrame(columns=["author", "date_published", "title", "text"])
+    authors: set[str] = set()
+    for meta, text in dataset_iter():
+        record = pd.DataFrame(
+            {
+                "author": [meta["class_index"]],
+                "date_published": [extract_date(meta)],
+                "title": [preprocess_text(meta["article_title"])],
+                "text": [preprocess_text(text)],
+            }
+        )
+        authors.add(meta["author_name"])
         df = pd.concat([df, record], ignore_index=True)
-    return df
+    return df, authors

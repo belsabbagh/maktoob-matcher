@@ -3,7 +3,13 @@ import pandas as pd
 from src.preprocessing import preprocess_fns
 
 if __name__ == "__main__":
-    res = pd.DataFrame(columns=["text", "author"])
+    res = pd.DataFrame(columns=["author", "date_published", "title", "text"])
+    authors: set[str] = set()
     for fn in preprocess_fns:
-        res = pd.concat([res, fn()])
+        df, authors = fn()
+        res = pd.concat([res, df])
+        authors.update(authors)
     res.to_csv(f"data/processed/data.csv", index=False)
+    authors = pd.DataFrame({"author": sorted(list(authors))})
+    authors.index.name = "class"
+    authors.to_csv(f"data/processed/authors.csv")

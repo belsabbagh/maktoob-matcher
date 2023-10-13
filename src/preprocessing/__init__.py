@@ -1,3 +1,3 @@
-from .d0 import preprocess
+from .d0 import aninis_preprocess
 
-preprocess_fns = [preprocess]
+preprocess_fns = [aninis_preprocess]
