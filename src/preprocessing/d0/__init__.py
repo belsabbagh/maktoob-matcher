@@ -50,7 +50,7 @@ def aninis_preprocess():
     for meta, text in dataset_iter():
         record = pd.DataFrame(
             {
-                "author": [meta["class_index"]],
+                "author": [meta["author_name"]],
                 "date_published": [extract_date(meta)],
                 "title": [preprocess_text(meta["article_title"])],
                 "text": [preprocess_text(text)],
