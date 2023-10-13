@@ -9,7 +9,10 @@ if __name__ == "__main__":
         df, authors = fn()
         res = pd.concat([res, df])
         authors.update(authors)
-    res.to_csv(f"data/processed/data.csv", index=False)
     authors = pd.DataFrame({"author": sorted(list(authors))})
     authors.index.name = "class"
     authors.to_csv(f"data/processed/authors.csv")
+    res["author"] = res["author"].apply(
+        lambda x: authors[authors["author"] == x].index[0]
+    )
+    res.to_csv(f"data/processed/data.csv", index=False)
