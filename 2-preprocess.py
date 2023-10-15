@@ -1,7 +1,7 @@
 """This module is responsible for preprocessing the data in the `data/raw` folder and storing it in the `data/processed` folder."""
 import pandas as pd
 from src.preprocessing import preprocess_fns
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 
 def make_authors_df(authors):
@@ -39,7 +39,9 @@ def preprocess_all(vectorizer):
 
 
 if __name__ == "__main__":
-    vectorizer = TfidfVectorizer()
-    df, authors = preprocess_all(vectorizer)
-    authors.to_csv(f"data/processed/authors.csv")
-    df.to_csv(f"data/processed/data_tfidf.csv", index=False)
+    vectorizers = [TfidfVectorizer(), CountVectorizer()]
+    for vectorizer in vectorizers:
+        vec_name = vectorizer.__class__.__name__
+        df, authors = preprocess_all(vectorizer)
+        authors.to_csv(f"data/processed/authors.csv")
+        df.to_csv(f"data/processed/data_{vec_name}.csv", index=False)
