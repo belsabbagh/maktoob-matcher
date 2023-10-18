@@ -1,25 +1,38 @@
 import tensorflow as tf
 
 
-def build_nn_model():
+# TODO: Add all model builders here
+
+
+def nn():
     pass
 
 
-def build_cnn_model():
+def cnn():
     pass
 
 
-def build_lstm_model():
+def lstm():
     pass
 
 
-def build_nb_model():
+def nb():
     pass
 
 
-def build_dt_model():
+def dt():
     pass
 
 
-def build_svm_model():
+def svm():
     pass
+
+
+all_model_builders = {
+    "NeuralNetwork": nn,
+    "ConvolutionalNeuralNetwork": cnn,
+    "LongShort-TermMemory": lstm,
+    "NaiveBayes": nb,
+    "DecisionTree": dt,
+    "SupportVector Machine": svm,
+}

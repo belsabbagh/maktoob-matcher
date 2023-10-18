@@ -19,6 +19,15 @@ def vectorize_text(text, vectorizer, vectorizer_kwargs=None, col_prefix=""):
     return df
 
 
+def get_author_id(author, authors):
+    return authors[authors["author"] == author].index[0]
+
+
+def select_top_features(df) -> pd.DataFrame:
+    # TODO: implement feature selection
+    return df
+
+
 def preprocess_all(vectorizer):
     res = pd.DataFrame(columns=["author", "date_published", "title", "text"])
     authors: set[str] = set()
@@ -27,14 +36,12 @@ def preprocess_all(vectorizer):
         res = pd.concat([res, df])
         authors.update(authors)
     authors = make_authors_df(authors)
-    res["author"] = res["author"].apply(
-        lambda x: authors[authors["author"] == x].index[0]
-    )
-    text_vector = vectorize_text(res["text"], vectorizer, col_prefix="text")
-    title_vector = vectorize_text(res["title"], vectorizer, col_prefix="title")
-    res = pd.concat(
-        [res[["author", "date_published"]], text_vector, title_vector], axis=1
-    )
+    res["author"] = res["author"].apply(lambda x: get_author_id(x, authors))
+    text_vec = vectorize_text(res["text"], vectorizer, col_prefix="text")
+    title_vec = vectorize_text(res["title"], vectorizer, col_prefix="title")
+    text_vec = select_top_features(text_vec)
+    title_vec = select_top_features(title_vec)
+    res = pd.concat([res[["author", "date_published"]], text_vec, title_vec], axis=1)
     return res, authors
 
 
