@@ -2,6 +2,8 @@
 import pandas as pd
 from src.preprocessing import preprocess_fns
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.feature_selection import SelectKBest, chi2, f_classif
+
 
 
 def make_authors_df(authors):
@@ -23,8 +25,10 @@ def get_author_id(author, authors):
     return authors[authors["author"] == author].index[0]
 
 
-def top_features(df) -> pd.DataFrame:
-    # TODO: implement feature selection
+def top_features(df, percentage=0.1, metric=chi2) -> pd.DataFrame:
+    top_number = int(len(df.columns) * percentage)
+    features = SelectKBest(metric, k=top_number).fit(df, df.index).get_support(indices=True)
+    df = df.iloc[:, features]
     return df
 
 
