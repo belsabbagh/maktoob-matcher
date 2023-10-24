@@ -95,7 +95,7 @@ if __name__ == "__main__":
             print(f"Training {name}...")
             model = model_builder(1168, 10)
             if name in each_model_parameter_grid.keys():
-                grid_search = GridSearchCV(
+                grid_search = HalvingGridSearchCV(
                     model,
                     each_model_parameter_grid[name],
                     scoring="f1_macro",
