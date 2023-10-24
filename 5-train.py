@@ -2,10 +2,12 @@
 import json
 import os
 import pandas as pd
-from sklearn.model_selection import KFold
+from sklearn.experimental import enable_halving_search_cv
+from sklearn.model_selection import HalvingGridSearchCV, KFold
 from sklearn import metrics as mt
 import tensorflow as tf
 from src.models import all_model_builders
+from src.models import each_model_parameter_grid
 import datetime
 import pickle
 import warnings
@@ -92,7 +94,19 @@ if __name__ == "__main__":
         for name, model_builder in all_model_builders.items():
             print(f"Training {name}...")
             model = model_builder(1168, 10)
+            if name in each_model_parameter_grid.keys():
+                grid_search = HalvingGridSearchCV(
+                    model,
+                    each_model_parameter_grid[name],
+                    scoring="f1_macro",
+                    n_jobs=-1,
+                    verbose=1,
+                )
+                grid_search.fit(X, y)
+                print(f'Best parameters For {name}:', grid_search.best_params_ )
+                model = grid_search.best_estimator_
             scores = cross_validate(model, X, y, labels=df["author"].unique(), is_nn=name in ["NeuralNetwork", "ConvolutionalNeuralNetwork", "LongShortTermMemory"])
             scores.to_csv(f"out/eval/{name}_{vec}_{selection_method}.csv", index=False)
             model.fit(X, y)
             save_model(model, name)
+
