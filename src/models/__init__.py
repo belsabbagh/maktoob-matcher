@@ -85,3 +85,24 @@ all_model_builders = {
     "ConvolutionalNeuralNetwork": cnn,
     "LongShortTermMemory": lstm,
 }
+
+each_model_parameter_grid = {
+    "GaussianNB": {
+        "var_smoothing": [1e-9, 1e-8, 1e-7, 1e-6, 1e-5],
+        "priors": [None, [0.5, 0.5], [0.6, 0.4], [0.7, 0.3], [0.8, 0.2], [0.9, 0.1]],
+    },
+    "DecisionTreeClassifier": {
+        "criterion": ["gini", "entropy"],
+        "splitter": ["best", "random"],
+        "max_depth": [None, 10, 20, 30, 40, 50],
+        "min_samples_split": [2, 3, 4, 5],
+        "min_samples_leaf": [1, 2, 3, 4, 5],
+    },
+    "SVC": {
+        "C": [0.1, 1, 10, 100, 1000],
+        "kernel": ["linear", "poly", "rbf", "sigmoid"],
+        "gamma": ["scale", "auto"],
+        "shrinking": [True, False],
+        "decision_function_shape": ["ovo", "ovr"],
+    },
+}
