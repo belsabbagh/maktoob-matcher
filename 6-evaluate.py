@@ -72,7 +72,7 @@ def score(y, y_hat, labels):
 
 
 def files_iter():
-    for f in os.listdir("data/processed"):
+    for f in os.listdir("data/processed/aninis"):
         if not f.startswith("data"):
             continue
         yield f
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     for filename in files_iter():
         vec, selection_method = filename.removesuffix(".csv").split("_")[1:]
         print(f"Training on vectorizer {vec} and selection method {selection_method}")
-        df = pd.read_csv(f"data/processed/{filename}")
+        df = pd.read_csv(f"data/processed/aninis/{filename}")
         df["date_published"] = pd.to_datetime(df["date_published"]).apply(
             datetime_to_float
         )

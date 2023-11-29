@@ -72,7 +72,7 @@ def score(y, y_hat, labels):
 
 
 def files_iter():
-    for f in os.listdir("data/processed"):
+    for f in os.listdir("data/processed/mined"):
         if not f.startswith("data"):
             continue
         yield f
@@ -82,13 +82,14 @@ if __name__ == "__main__":
     count = 0
     start = default_timer()
     for filename in files_iter():
-        vec, selection_method = filename.removesuffix(".csv").split("_")[1:]
+        vec, selection_method = filename.removesuffix(".csv").split("_", 2)[1:]
         print(f"Training on vectorizer {vec} and selection method {selection_method}")
-        df = pd.read_csv(f"data/processed/{filename}")
+        df = pd.read_csv(f"data/processed/mined/{filename}")
         X, y = (
-            df.drop(columns=["author"], inplace=False),
-            df["author"],
+            df.drop(columns=["0"], inplace=False),
+            df["0"],
         )
+        print(y.value_counts())
         nfeatures = X.shape[1]
         print("Number of features:", nfeatures)
         for name, model_builder in all_model_builders.items():
@@ -112,7 +113,7 @@ if __name__ == "__main__":
                 model,
                 X,
                 y,
-                labels=df["author"].unique(),
+                labels=df["0"].unique(),
                 is_nn=name
                 in [
                     "NeuralNetwork",

@@ -63,8 +63,8 @@ if __name__ == "__main__":
         vec_name = vectorizer.__class__.__name__
         for feature_selection_method in feature_selection_methods:
             df, authors = preprocess_all(vectorizer, feature_selection_method)
-            authors.to_csv(f"data/processed/authors.csv")
+            authors.to_csv(f"data/processed/aninis/authors.csv")
             df.to_csv(
-                f"data/processed/data_{vec_name}_{feature_selection_method.__name__.replace('_', '-')}.csv",
+                f"data/processed/aninis/data_{vec_name}_{feature_selection_method.__name__.replace('_', '-')}.csv",
                 index=False,
             )

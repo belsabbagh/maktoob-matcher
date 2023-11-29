@@ -11,7 +11,7 @@ def remove_english(text):
 
 def preprocess_text(text):
     words = text.split()
-    words = [word for word in words if not stp.is_stop(word)]
+    # words = [word for word in words if not stp.is_stop(word)]
     words = [remove_symbols(word) for word in words]
     words = [remove_english(word) for word in words]
     return " ".join(w.strip() for w in words if w.strip() != "")
