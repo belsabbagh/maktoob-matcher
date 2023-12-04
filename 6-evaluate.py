@@ -41,7 +41,7 @@ def train_test_iter(X, y, kf):
 
 def cross_validate(model, X, y, k=5, labels=None, is_nn=False):
     kf = KFold(n_splits=k)
-    scores = {"label": [], "precision": [], "recall": [], "f1": []}
+    scores = {"label": [], "precision": [], "recall": [], "f1": [], "accuracy": []}
     cmats = []
     for X_train, y_train, X_test, y_test in train_test_iter(X, y, kf):
         # print(f"Training on {len(X_train)} samples, testing on {len(X_test)} samples")
@@ -50,9 +50,14 @@ def cross_validate(model, X, y, k=5, labels=None, is_nn=False):
         y_hat = np.argmax(y_hat, axis=1) if is_nn else y_hat
         cmat = mt.confusion_matrix(y_test, y_hat, labels=labels)
         cmats.append(cmat)
-        precision = cmat.diagonal() / cmat.sum(axis=0)
-        recall = cmat.diagonal() / cmat.sum(axis=1)
-        f1 = 2 * precision * recall / (precision + recall)
+        precision:np.ndarray = cmat.diagonal() / cmat.sum(axis=0)
+        recall:np.ndarray = cmat.diagonal() / cmat.sum(axis=1)
+        f1:np.ndarray = 2 * precision * recall / (precision + recall)
+        accuracy = cmat.diagonal().sum() / cmat.sum()
+        # fill in missing values
+        precision = np.nan_to_num(precision, nan=0)
+        recall = np.nan_to_num(recall, nan=0)
+        f1 = np.nan_to_num(f1, nan=0)
         for i, s in enumerate(list(zip(precision, recall, f1))):
             scores['label'].append(i)
             scores['precision'].append(s[0])
